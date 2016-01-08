@@ -1,5 +1,5 @@
 <a name="BitfinexWS"></a>
-## BitfinexWS
+# BitfinexWS
 **Kind**: global class  
 
 * [BitfinexWS](#BitfinexWS)
