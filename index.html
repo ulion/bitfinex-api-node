@@ -108,35 +108,491 @@ Take the example payload to the right.</p>
 The nonce provided must be strictly increasing.
 </aside>
 
-          <h1 id="websocket">Websocket</h1>
+          <p><a name="BitfinexWS"></a></p>
 
-<h2 id="general">General</h2>
+<h2 id="bitfinexws">BitfinexWS</h2>
 
-<h3 id="current-version">Current Version</h3>
-
-<p>Bitfinex Websocket API current version is 1.0</p>
-
-<h3 id="ssl-websocket-connection">SSL Websocket Connection</h3>
-
-<p>URI: <code class="prettyprint">wss://api2.bitfinex.com:3000/ws</code></p>
-
-<h3 id="message-encoding">Message encoding</h3>
-
-<p>Each message sent and received via the Bitfinex&rsquo;s websocket channel is encoded in JSON format</p>
-
-<h3 id="public-channels">Public Channels</h3>
+<p><strong>Kind</strong>: global class  </p>
 
 <ul>
-<li><strong>Book:</strong> order book feed (BTCUSD, LTCUSD, LTCBTC)</li>
-<li><strong>Ticker:</strong> ticker feed (BTCUSD, LTCUSD, LTCBTC)</li>
-<li><strong>Trades:</strong> trades feed (BTCUSD, LTCUSD, LTCBTC)</li>
-</ul>
-
-<h3 id="authenticated-channels">Authenticated Channels</h3>
+<li><a href="#BitfinexWS">BitfinexWS</a>
 
 <ul>
-<li><strong>Account Info:</strong> account specific private data (positions, orders, executed trades, balances)</li>
+<li><a href="#new_BitfinexWS_new">new BitfinexWS(APIKey, APISecret)</a></li>
+<li><em>instance</em>
+
+<ul>
+<li><a href="#BitfinexWS+subscribeOrderBook">.subscribeOrderBook([pair], [precision],
+[length])</a></li>
+<li><a href="#BitfinexWS+subscribeTrades">.subscribeTrades([pair])</a></li>
+<li><a href="#BitfinexWS+subscribeTicker">.subscribeTicker([pair])</a></li>
+<li><a href="#BitfinexWS+unsubscribe">.unsubscribe(chanId)</a></li>
+<li><a href="#BitfinexWS+auth">.auth()</a></li>
+<li><a href="#BitfinexWS+event_message">&ldquo;message&rdquo;</a></li>
+<li><a href="#BitfinexWS+event_open">&ldquo;open&rdquo;</a></li>
+<li><a href="#BitfinexWS+event_error">&ldquo;error&rdquo;</a></li>
+<li><a href="#BitfinexWS+event_close">&ldquo;close&rdquo;</a></li>
+<li><a href="#BitfinexWS+event_subscribed">&ldquo;subscribed&rdquo;</a></li>
+<li><a href="#BitfinexWS+event_auth">&ldquo;auth&rdquo;</a></li>
+<li><a href="#BitfinexWS+event_ps">&ldquo;ps&rdquo;</a></li>
+<li><a href="#BitfinexWS+event_pn">&ldquo;pn&rdquo;</a></li>
+<li><a href="#BitfinexWS+event_pu">&ldquo;pu&rdquo;</a></li>
+<li><a href="#BitfinexWS+event_pc">&ldquo;pc&rdquo;</a></li>
+<li><a href="#BitfinexWS+event_ws">&ldquo;ws&rdquo;</a></li>
+<li><a href="#BitfinexWS+event_ws">&ldquo;ws&rdquo;</a></li>
+<li><a href="#BitfinexWS+event_os">&ldquo;os&rdquo;</a></li>
+<li><a href="#BitfinexWS+event_on">&ldquo;on&rdquo;</a></li>
+<li><a href="#BitfinexWS+event_ou">&ldquo;ou&rdquo;</a></li>
+<li><a href="#BitfinexWS+event_oc">&ldquo;oc&rdquo;</a></li>
+<li><a href="#BitfinexWS+event_te">&ldquo;te&rdquo;</a></li>
+<li><a href="#BitfinexWS+event_tu">&ldquo;tu&rdquo;</a></li>
+<li><a href="#BitfinexWS+event_ticker">&ldquo;ticker&rdquo;</a></li>
+<li><a href="#BitfinexWS+event_trade">&ldquo;trade&rdquo;</a></li>
+<li><a href="#BitfinexWS+event_orderbook">&ldquo;orderbook&rdquo;</a></li>
+</ul></li>
+<li><em>static</em>
+
+<ul>
+<li><a href="#BitfinexWS.WebSocketURI">.WebSocketURI</a> :
+<code>String</code></li>
+</ul></li>
+</ul></li>
 </ul>
+
+<p><a name="new_BitfinexWS_new"></a></p>
+
+<h3 id="new-bitfinexws-apikey-apisecret">new BitfinexWS(APIKey, APISecret)</h3>
+
+<p>Handles communitaction with Bitfinex WebSocket API.</p>
+
+<table><thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>APIKey</td>
+<td><code>sting</code></td>
+</tr>
+<tr>
+<td>APISecret</td>
+<td><code>string</code></td>
+</tr>
+</tbody></table>
+
+<p><a name="BitfinexWS+subscribeOrderBook"></a></p>
+
+<h3 id="bitfinexws-subscribeorderbook-pair-precision-length">bitfinexWS.subscribeOrderBook([pair], [precision], [length])</h3>
+
+<p>Subscribe to Order book updates. Snapshot will be sended as multiple
+updates.
+Event will be emited as <code class="prettyprint">PAIRNAME_book</code>.</p>
+
+<p><strong>Kind</strong>: instance method of <code><a href="#BitfinexWS">BitfinexWS</a></code><br>
+<strong>See</strong>: http://docs.bitfinex.com/#order-books  </p>
+
+<table><thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>[pair]</td>
+<td><code>string</code></td>
+<td>BTCUSD, LTCUSD or LTCBTC. Default</td>
+</tr>
+<tr>
+<td>BTCUSD</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[precision]</td>
+<td><code>string</code></td>
+<td>Level of price aggregation (P0,</td>
+</tr>
+<tr>
+<td>P1, P2, P3).                              The default is P0.</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[length]</td>
+<td><code>string</code></td>
+<td>Number of price points. 25 (default)</td>
+</tr>
+<tr>
+<td>or 100.</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+
+<p><a name="BitfinexWS+subscribeTrades"></a></p>
+
+<h3 id="bitfinexws-subscribetrades-pair">bitfinexWS.subscribeTrades([pair])</h3>
+
+<p>Subscribe to trades. Snapshot will be sended as multiple updates.
+Event will be emited as <code class="prettyprint">PAIRNAME_trades</code>.</p>
+
+<p><strong>Kind</strong>: instance method of <code><a href="#BitfinexWS">BitfinexWS</a></code><br>
+<strong>See</strong>: http://docs.bitfinex.com/#trades75  </p>
+
+<table><thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>[pair]</td>
+<td><code>string</code></td>
+<td>BTCUSD, LTCUSD or LTCBTC. Default</td>
+</tr>
+<tr>
+<td>BTCUSD</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+
+<p><a name="BitfinexWS+subscribeTicker"></a></p>
+
+<h3 id="bitfinexws-subscribeticker-pair">bitfinexWS.subscribeTicker([pair])</h3>
+
+<p>Subscribe to ticker updates. The ticker is a high level overview of the
+state
+of the market. It shows you the current best bid and ask, as well as the
+last
+trade price.</p>
+
+<p>Event will be emited as <code class="prettyprint">PAIRNAME_ticker</code>.</p>
+
+<p><strong>Kind</strong>: instance method of <code><a href="#BitfinexWS">BitfinexWS</a></code><br>
+<strong>See</strong>: http://docs.bitfinex.com/#ticker76  </p>
+
+<table><thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>[pair]</td>
+<td><code>string</code></td>
+<td>BTCUSD, LTCUSD or LTCBTC. Default</td>
+</tr>
+<tr>
+<td>BTCUSD</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+
+<p><a name="BitfinexWS+unsubscribe"></a></p>
+
+<h3 id="bitfinexws-unsubscribe-chanid">bitfinexWS.unsubscribe(chanId)</h3>
+
+<p>Unsubscribe to a channel.</p>
+
+<p><strong>Kind</strong>: instance method of <code><a href="#BitfinexWS">BitfinexWS</a></code>  </p>
+
+<table><thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>chanId</td>
+<td><code>number</code></td>
+<td>ID of the channel received on</td>
+</tr>
+<tr>
+<td><code class="prettyprint">subscribed</code> event.</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+
+<p><a name="BitfinexWS+auth"></a></p>
+
+<h3 id="bitfinexws-auth">bitfinexWS.auth()</h3>
+
+<p>Autenticate the user. Will receive executed traded updates.</p>
+
+<p><strong>Kind</strong>: instance method of <code><a href="#BitfinexWS">BitfinexWS</a></code><br>
+<strong>See</strong>: http://docs.bitfinex.com/#wallet-updates<br>
+<a name="BitfinexWS+event_message"></a></p>
+
+<h3 id="quot-message-quot">&ldquo;message&rdquo;</h3>
+
+<p><strong>Kind</strong>: event emitted by <code><a href="#BitfinexWS">BitfinexWS</a></code><br>
+<a name="BitfinexWS+event_open"></a></p>
+
+<h3 id="quot-open-quot">&ldquo;open&rdquo;</h3>
+
+<p>WebSocket connection is open. Ready to send.</p>
+
+<p><strong>Kind</strong>: event emitted by <code><a href="#BitfinexWS">BitfinexWS</a></code><br>
+<a name="BitfinexWS+event_error"></a></p>
+
+<h3 id="quot-error-quot">&ldquo;error&rdquo;</h3>
+
+<p><strong>Kind</strong>: event emitted by <code><a href="#BitfinexWS">BitfinexWS</a></code><br>
+<a name="BitfinexWS+event_close"></a></p>
+
+<h3 id="quot-close-quot">&ldquo;close&rdquo;</h3>
+
+<p>WebSocket connection is closed.</p>
+
+<p><strong>Kind</strong>: event emitted by <code><a href="#BitfinexWS">BitfinexWS</a></code><br>
+<a name="BitfinexWS+event_subscribed"></a></p>
+
+<h3 id="quot-subscribed-quot">&ldquo;subscribed&rdquo;</h3>
+
+<p><strong>Kind</strong>: event emitted by <code><a href="#BitfinexWS">BitfinexWS</a></code><br>
+<strong>Properties</strong></p>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>channel</td>
+<td><code>string</code></td>
+<td>Channel type</td>
+</tr>
+<tr>
+<td>pair</td>
+<td><code>string</code></td>
+<td>Currency pair.</td>
+</tr>
+<tr>
+<td>chanId</td>
+<td><code>number</code></td>
+<td>Channel ID sended by Bitfinex</td>
+</tr>
+</tbody></table>
+
+<p><a name="BitfinexWS+event_auth"></a></p>
+
+<h3 id="quot-auth-quot">&ldquo;auth&rdquo;</h3>
+
+<p><strong>Kind</strong>: event emitted by <code><a href="#BitfinexWS">BitfinexWS</a></code><br>
+<a name="BitfinexWS+event_ps"></a></p>
+
+<h3 id="quot-ps-quot">&ldquo;ps&rdquo;</h3>
+
+<p>position snapshot</p>
+
+<p><strong>Kind</strong>: event emitted by <code><a href="#BitfinexWS">BitfinexWS</a></code><br>
+<a name="BitfinexWS+event_pn"></a></p>
+
+<h3 id="quot-pn-quot">&ldquo;pn&rdquo;</h3>
+
+<p>new position</p>
+
+<p><strong>Kind</strong>: event emitted by <code><a href="#BitfinexWS">BitfinexWS</a></code><br>
+<a name="BitfinexWS+event_pu"></a></p>
+
+<h3 id="quot-pu-quot">&ldquo;pu&rdquo;</h3>
+
+<p>position update</p>
+
+<p><strong>Kind</strong>: event emitted by <code><a href="#BitfinexWS">BitfinexWS</a></code><br>
+<a name="BitfinexWS+event_pc"></a></p>
+
+<h3 id="quot-pc-quot">&ldquo;pc&rdquo;</h3>
+
+<p>position close</p>
+
+<p><strong>Kind</strong>: event emitted by <code><a href="#BitfinexWS">BitfinexWS</a></code><br>
+<a name="BitfinexWS+event_ws"></a></p>
+
+<h3 id="quot-ws-quot">&ldquo;ws&rdquo;</h3>
+
+<p>wallet snapshot</p>
+
+<p><strong>Kind</strong>: event emitted by <code><a href="#BitfinexWS">BitfinexWS</a></code><br>
+<a name="BitfinexWS+event_ws"></a></p>
+
+<h3 id="quot-ws-quot">&ldquo;ws&rdquo;</h3>
+
+<p>wallet snapshot</p>
+
+<p><strong>Kind</strong>: event emitted by <code><a href="#BitfinexWS">BitfinexWS</a></code><br>
+<a name="BitfinexWS+event_os"></a></p>
+
+<h3 id="quot-os-quot">&ldquo;os&rdquo;</h3>
+
+<p>order snapshot</p>
+
+<p><strong>Kind</strong>: event emitted by <code><a href="#BitfinexWS">BitfinexWS</a></code><br>
+<a name="BitfinexWS+event_on"></a></p>
+
+<h3 id="quot-on-quot">&ldquo;on&rdquo;</h3>
+
+<p>new order</p>
+
+<p><strong>Kind</strong>: event emitted by <code><a href="#BitfinexWS">BitfinexWS</a></code><br>
+<a name="BitfinexWS+event_ou"></a></p>
+
+<h3 id="quot-ou-quot">&ldquo;ou&rdquo;</h3>
+
+<p>order update</p>
+
+<p><strong>Kind</strong>: event emitted by <code><a href="#BitfinexWS">BitfinexWS</a></code><br>
+<a name="BitfinexWS+event_oc"></a></p>
+
+<h3 id="quot-oc-quot">&ldquo;oc&rdquo;</h3>
+
+<p>order cancel</p>
+
+<p><strong>Kind</strong>: event emitted by <code><a href="#BitfinexWS">BitfinexWS</a></code><br>
+<a name="BitfinexWS+event_te"></a></p>
+
+<h3 id="quot-te-quot">&ldquo;te&rdquo;</h3>
+
+<p>trade executed</p>
+
+<p><strong>Kind</strong>: event emitted by <code><a href="#BitfinexWS">BitfinexWS</a></code><br>
+<a name="BitfinexWS+event_tu"></a></p>
+
+<h3 id="quot-tu-quot">&ldquo;tu&rdquo;</h3>
+
+<p>trade execution update</p>
+
+<p><strong>Kind</strong>: event emitted by <code><a href="#BitfinexWS">BitfinexWS</a></code><br>
+<a name="BitfinexWS+event_ticker"></a></p>
+
+<h3 id="quot-ticker-quot">&ldquo;ticker&rdquo;</h3>
+
+<p><strong>Kind</strong>: event emitted by <code><a href="#BitfinexWS">BitfinexWS</a></code><br>
+<strong>Properties</strong></p>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>bid</td>
+<td><code>number</code></td>
+</tr>
+<tr>
+<td>bidSize</td>
+<td><code>number</code></td>
+</tr>
+<tr>
+<td>ask</td>
+<td><code>number</code></td>
+</tr>
+<tr>
+<td>askSize</td>
+<td><code>number</code></td>
+</tr>
+<tr>
+<td>dailyChange</td>
+<td><code>number</code></td>
+</tr>
+<tr>
+<td>dailyChangePerc</td>
+<td><code>number</code></td>
+</tr>
+<tr>
+<td>lastPrice</td>
+<td><code>number</code></td>
+</tr>
+<tr>
+<td>volume</td>
+<td><code>number</code></td>
+</tr>
+<tr>
+<td>high</td>
+<td><code>number</code></td>
+</tr>
+<tr>
+<td>low</td>
+<td><code>number</code></td>
+</tr>
+</tbody></table>
+
+<p><a name="BitfinexWS+event_trade"></a></p>
+
+<h3 id="quot-trade-quot">&ldquo;trade&rdquo;</h3>
+
+<p><strong>Kind</strong>: event emitted by <code><a href="#BitfinexWS">BitfinexWS</a></code><br>
+<strong>See</strong>: http://docs.bitfinex.com/#trades75<br>
+<strong>Properties</strong></p>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>seq</td>
+<td><code>string</code></td>
+</tr>
+<tr>
+<td>timestamp</td>
+<td><code>number</code></td>
+</tr>
+<tr>
+<td>price</td>
+<td><code>number</code></td>
+</tr>
+<tr>
+<td>amount</td>
+<td><code>number</code></td>
+</tr>
+</tbody></table>
+
+<p><a name="BitfinexWS+event_orderbook"></a></p>
+
+<h3 id="quot-orderbook-quot">&ldquo;orderbook&rdquo;</h3>
+
+<p><strong>Kind</strong>: event emitted by <code><a href="#BitfinexWS">BitfinexWS</a></code><br>
+<strong>See</strong>: http://docs.bitfinex.com/#order-books<br>
+<strong>Properties</strong></p>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>price</td>
+<td><code>string</code></td>
+</tr>
+<tr>
+<td>count</td>
+<td><code>number</code></td>
+</tr>
+<tr>
+<td>amount</td>
+<td><code>number</code></td>
+</tr>
+</tbody></table>
+
+<p><a name="BitfinexWS.WebSocketURI"></a></p>
+
+<h3 id="bitfinexws-websocketuri-string">BitfinexWS.WebSocketURI : <code>String</code></h3>
+
+<p><strong>Kind</strong>: static constant of <code><a href="#BitfinexWS">BitfinexWS</a></code>  </p>
 
       </div>
       <div class="dark-box">
