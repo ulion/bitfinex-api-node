@@ -83,8 +83,8 @@ class Rest2 {
     return this.makePublicRequest(`ticker/${symbol}`, cb)
   }
 
-  tickers (cb) {
-    return this.makePublicRequest(`tickers`, cb)
+  tickers (symbols = '', cb) {
+    return this.makePublicRequest(`tickers/${symbols}`, cb)
   }
 
   stats (key = 'pos.size:1m:tBTCUSD:long', context = 'hist', cb) {
