@@ -29,7 +29,7 @@ class Rest2 {
     if (!this.key || !this.secret) {
       return cb(new Error('missing api key or secret'))
     }
-    const url = `${this.url}/${this.version}/${path}`
+    const url = `${this.url}${this.version}/${path}`
     const nonce = JSON.stringify(this.generateNonce())
     const rawBody = JSON.stringify(payload)
 
@@ -53,7 +53,7 @@ class Rest2 {
   }
 
   makePublicRequest (name, cb = this.genericCallback.bind(this)) {
-    const url = `${this.url}/${this.version}/${name}`
+    const url = `${this.url}${this.version}/${name}`
     return rp({
       url,
       method: 'GET',
@@ -61,20 +61,30 @@ class Rest2 {
       json: true
     })
     .then((response) => {
-      this.transform(response, name, cb)
+      return this.transform(response, name)
     })
-    .catch((error) => cb(new Error(error)))
+    .then((result) => {
+      if (cb) {
+        cb(null, result)
+      }
+      return result
+    })
+    .catch((error) => {
+      if (cb) {
+        cb(error)
+      }
+      throw error
+    })
   }
 
-  transform (result, name, cb) {
+  transform (result, name) {
     let n = {}
 
     if (this.transformer.normalize) {
       n = this.transformer.normalize(name)
     }
 
-    result = this.transformer(result, n.type, n.symbol)
-    cb(null, result)
+    return this.transformer(result, n.type, n.symbol)
   }
 
   // Public endpoints
@@ -84,7 +94,7 @@ class Rest2 {
   }
 
   tickers (symbols = '', cb) {
-    return this.makePublicRequest(`tickers/${symbols}`, cb)
+    return this.makePublicRequest(`tickers?symbols=${symbols}`, cb)
   }
 
   stats (key = 'pos.size:1m:tBTCUSD:long', context = 'hist', cb) {

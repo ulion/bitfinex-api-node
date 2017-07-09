@@ -3,7 +3,8 @@
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
 const crypto = require('crypto')
-const request = require('request')
+const rp = require('request-promise')
+const BASE_TIMEOUT = 15000
 
 function rest (key, secret, nonceGenerator) {
   this.url = 'https://api.bitfinex.com'
@@ -66,6 +67,28 @@ rest.prototype.make_request = function (path, params, cb) {
 
 rest.prototype.make_public_request = function (path, cb) {
   const url = `${this.url}/${this.version}/${path}`
+  return rp({
+    url,
+    method: 'GET',
+    timeout: BASE_TIMEOUT,
+    json: true
+  })
+  .then((response) => {
+    if (cb) {
+      cb(null, response)
+    }
+    return response
+  })
+  .catch((error) => {
+    if (cb) {
+      cb(error)
+    }
+    throw error
+  });
+}
+/*
+rest.prototype.make_public_request = function (path, cb) {
+  const url = `${this.url}/${this.version}/${path}`
   return request({
     url,
     method: 'GET',
@@ -88,7 +111,7 @@ rest.prototype.make_public_request = function (path, cb) {
     }
     return cb(null, result)
   })
-}
+}*/
 
 rest.prototype.ticker = function (symbol, cb) {
   if (arguments.length == 0) {
