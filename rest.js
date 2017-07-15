@@ -14,7 +14,7 @@ function rest (key, secret, nonceGenerator) {
   this.nonce = new Date().getTime()
   this._nonce = typeof nonceGenerator === 'function' ? nonceGenerator : function () {
         // noinspection JSPotentiallyInvalidUsageOfThis
-    return ++this.nonce
+    return Date.now();//++this.nonce
   }
 }
 
@@ -40,29 +40,25 @@ rest.prototype.make_request = function (path, params, cb) {
     'X-BFX-PAYLOAD': payload,
     'X-BFX-SIGNATURE': signature
   }
-  return request({
+  return rp({
     url,
     method: 'POST',
     headers,
+    json: true,
     timeout: 15000
-  }, (err, response, body) => {
-    let error, result
-    if (err || (response.statusCode !== 200 && response.statusCode !== 400)) {
-      return cb(new Error(err != null ? err : response.statusCode))
-    }
-    try {
-      result = JSON.parse(body)
-    } catch (error1) {
-      error = error1
-      return cb(null, {
-        message: body.toString()
-      })
-    }
-    if (result.message != null) {
-      return cb(new Error(result.message))
-    }
-    return cb(null, result)
   })
+  .then((response) => {
+    if (cb) {
+      cb(null, response)
+    }
+    return response
+  })
+  .catch((error) => {
+    if (cb) {
+      cb(error)
+    }
+    throw error
+  });
 }
 
 rest.prototype.make_public_request = function (path, cb) {

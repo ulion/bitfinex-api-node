@@ -15,7 +15,7 @@ class Rest2 {
       ? opts.nonceGenerator
       : function () {
         // noinspection JSPotentiallyInvalidUsageOfThis
-        return ++this.nonce
+        return Date.now()//++this.nonce
       }
 
     this.transformer = opts.transformer || passThrough
@@ -46,10 +46,24 @@ class Rest2 {
         'bfx-apikey': this.key,
         'bfx-signature': signature
       },
-      json: payload
+      json: true,
+      body: payload
     })
-    .then((response) => cb(null, JSON.parse(response)))
-    .catch((error) => cb(new Error(error)))
+    .then((result) => {
+      if (result[0] === 'error') {
+        throw new Error(JSON.stringify(result));
+      }
+      if (cb) {
+        cb(null, result)
+      }
+      return result
+    })
+    .catch((error) => {
+      if (cb) {
+        cb(error)
+      }
+      throw error
+    })
   }
 
   makePublicRequest (name, cb = this.genericCallback.bind(this)) {
@@ -61,6 +75,9 @@ class Rest2 {
       json: true
     })
     .then((response) => {
+      if (response[0] === 'error') {
+        throw new Error(JSON.stringify(response));
+      }
       return this.transform(response, name)
     })
     .then((result) => {
@@ -97,6 +114,14 @@ class Rest2 {
     return this.makePublicRequest(`tickers?symbols=${symbols}`, cb)
   }
 
+  orderBook (symbol = '', precision = 'P0', limit = 25, cb) {
+    return this.makePublicRequest(`book/${symbol}/${precision}?len=${limit}`, cb)
+  }
+
+  trades (symbol = 'tBTCUSD', limit = 120, cb) {
+    return this.makePublicRequest(`trades/${symbol}/hist?limit=${limit}`, cb)
+  }
+
   stats (key = 'pos.size:1m:tBTCUSD:long', context = 'hist', cb) {
     return this.makePublicRequest(`stats1/${key}/${context}`, cb)
   }
@@ -116,15 +141,23 @@ class Rest2 {
   // Auth endpoints
 
   alertList (type = 'price', cb) {
-    return this.makeAuthRequest(`/auth/r/alerts?type=${type}`, null, cb)
+    return this.makeAuthRequest(`auth/r/alerts?type=${type}`, null, cb)
   }
 
   alertSet (type = 'price', symbol = 'tBTCUSD', price = 0) {
-    return this.makeAuthRequest(`/auth/w/alert/set`, {type, symbol, price})
+    return this.makeAuthRequest(`auth/w/alert/set`, {type, symbol, price})
   }
 
   alertDelete (symbol = 'tBTCUSD', price = 0) {
-    return this.makeAuthRequest(`/auth/w/alert/set`, {symbol, price})
+    return this.makeAuthRequest(`auth/w/alert/set`, {symbol, price})
+  }
+
+  orders (cb) {
+    return this.makeAuthRequest(`auth/r/orders`, null, cb)
+  }
+
+  wallets (cb) {
+    return this.makeAuthRequest(`auth/r/wallets`, null, cb)
   }
 
   // TODO
